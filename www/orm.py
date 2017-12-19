@@ -26,6 +26,13 @@ async def create_pool(loop, **kw):
         loop=loop
     )
 
+@asyncio.coroutine
+async def destory_pool():
+    global __pool
+    if __pool is not None :
+        __pool.close()
+        await __pool.wait_closed()
+        
 async def select(sql, args, size=None):
     log(sql, args)
     global __pool
@@ -113,7 +120,7 @@ class ModelMetaclass(type):
                 logging.info('  found mapping: %s ==> %s' % (k, v))
                 mappings[k] = v
                 if v.primary_key:
-                    # 找到主.销:
+                    # 找到主.髞:
                     if primaryKey:
                         raise StandardError('Duplicate primary key for field: %s' % k)
                     primaryKey = k
